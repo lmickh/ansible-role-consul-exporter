@@ -1,0 +1,37 @@
+---
+- name: Create consul-exporter container
+  become: true
+  docker_container:
+    name: "{{ consul_exporter_service_name }}"
+    command: "{{ consul_exporter_args }}"
+    detach: true
+    image: "{{ consul_exporter_image }}"
+    network_mode: host
+    ports:
+      - "9107:9107"
+    state: present
+  register: consul_exporter_service_config
+
+- name: Create consul-exporter service file
+  become: true
+  template:
+    dest: "/etc/systemd/system/{{ consul_exporter_service_name }}.service"
+    src: "templates/consul-exporter.service.j2"
+    mode: 0664
+  register: consul_exporter_service_config
+  when: ansible_service_mgr == 'systemd'
+
+- name: Restart consul-exporter service
+  become: true
+  systemd:
+    name: "{{ consul_exporter_service_name }}.service"
+    daemon_reload: yes
+    state: restarted
+  when: consul_exporter_service_config.changed
+
+- name: Enable consul-exporter service
+  become: true
+  service:
+    name: "{{ consul_exporter_service_name }}.service"
+    state: started
+    enabled: yes

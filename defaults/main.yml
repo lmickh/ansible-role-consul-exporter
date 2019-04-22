@@ -1,7 +1,7 @@
 ---
 consul_exporter_args:
-  - '-consul.server=172.17.0.1:8500'
-consul_exporter_image: quay.io/prometheus/consul-exporter:v0.3.0
+  - '--consul.server=172.17.0.1:8500'
+consul_exporter_image: quay.io/prometheus/consul-exporter:v0.4.0
 consul_exporter_restart: "on-failure"
 consul_exporter_restart_sec: "15"
 consul_exporter_service_name: "consul-exporter"

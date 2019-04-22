@@ -1,4 +1,4 @@
-Role Name
+consul-exporter
 =========
 
 Creates a systemd service to run the Prometheus consul-exporter as a Docker container.

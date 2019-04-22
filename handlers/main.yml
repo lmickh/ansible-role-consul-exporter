@@ -1,0 +1,8 @@
+---
+- name: Restart consul-exporter
+  become: true
+  systemd:
+    name: "{{ consul_exporter_service_name }}.service"
+    daemon_reload: yes
+    state: restarted
+  listen: restart consul-exporter

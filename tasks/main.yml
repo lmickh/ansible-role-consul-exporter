@@ -10,7 +10,7 @@
     ports:
       - "9107:9107"
     state: present
-  register: consul_exporter_service_config
+  notify: restart consul-exporter
 
 - name: Create consul-exporter service file
   become: true
@@ -18,16 +18,8 @@
     dest: "/etc/systemd/system/{{ consul_exporter_service_name }}.service"
     src: "templates/consul-exporter.service.j2"
     mode: 0664
-  register: consul_exporter_service_config
-  when: ansible_service_mgr == 'systemd'
+  notify: restart consul-exporter
 
-- name: Restart consul-exporter service
-  become: true
-  systemd:
-    name: "{{ consul_exporter_service_name }}.service"
-    daemon_reload: yes
-    state: restarted
-  when: consul_exporter_service_config.changed
 
 - name: Enable consul-exporter service
   become: true
